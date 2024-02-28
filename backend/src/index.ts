@@ -1,10 +1,16 @@
 import { Hono } from "hono";
-import 
+import { createUser } from "./routes/user";
+const app = new Hono<{
+  Bindings: {
+    DATABASE_URL: string;
+  };
+}>();
 
-const app = new Hono();
-
-app.post("/api/v1/signup", (c) => {
-  return c.text("Hello Hono!");
+app.post("/api/v1/signup", async (c) => {
+  const body = await c.req.parseBody();
+  return c.json({
+    msg: "user created successfully",
+  });
 });
 
 app.post("/api/v1/signin", (c) => {
