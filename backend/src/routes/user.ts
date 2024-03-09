@@ -1,6 +1,8 @@
 import { PrismaClient, User } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { decode, sign, verify } from "hono/jwt";
+import dotenv from "dotenv";
+dotenv.config();
 
 async function generateHash(password: string): Promise<string> {
   const digest = await crypto.subtle.digest(
@@ -14,15 +16,17 @@ async function generateHash(password: string): Promise<string> {
 }
 
 const prisma = new PrismaClient({
-  datasourceUrl: c.env?.DATABASE_URL,
+  datasourceUrl: process.env.DATABASE_URL,
 }).$extends(withAccelerate());
 
 export async function createUser(user: User) {
   const hashedPwd = await generateHash(user.password);
-  await prisma.user.create({
+  const res = await prisma.user.create({
     data: {
       email: user.email,
       password: hashedPwd,
+      name: user.name,
     },
   });
+  console.log(res);
 }

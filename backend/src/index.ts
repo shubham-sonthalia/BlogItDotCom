@@ -1,13 +1,18 @@
 import { Hono } from "hono";
 import { createUser } from "./routes/user";
-const app = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-  };
-}>();
+import { z } from "zod";
+
+const app = new Hono();
+
+const schema = z.Schema({
+  name: z.string(),
+  age: z.number(),
+  email: z.string().email(),
+});
 
 app.post("/api/v1/signup", async (c) => {
   const body = await c.req.parseBody();
+  createUser();
   return c.json({
     msg: "user created successfully",
   });
