@@ -4,6 +4,7 @@ import { z } from "zod";
 import { User } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { PrismaClient } from "@prisma/client/edge";
+import { zValidator } from "@hono/zod-validator";
 
 const app = new Hono<{
   Bindings: {
@@ -17,12 +18,11 @@ const SignUpData = z.object({
   email: z.string().email(),
 });
 
-app.post("/api/v1/signup", async (c) => {
+app.post("/api/v1/signup", zValidator("json", SignUpData), async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
   const body = await c.req.json();
-  console.log(body);
   await createUser(prisma, body);
   return c.json({
     msg: "user created successfully",
