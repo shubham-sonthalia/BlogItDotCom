@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { createUser } from "./routes/user";
+import { createUser, getUser } from "./routes/user";
 import { z } from "zod";
 import { User } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
@@ -20,13 +20,17 @@ const SignUpData = z.object({
   email: z.string().email(),
 });
 
+const SignInData = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).max(16),
+});
+
 app.post("/api/v1/signup", zValidator("json", SignUpData), async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
   const body = await c.req.json();
   const response = await createUser(prisma, body);
-  console.log("dfdfkdfjdf" + response);
   const jwtPaylod = {
     id: response.id,
   };
@@ -34,8 +38,23 @@ app.post("/api/v1/signup", zValidator("json", SignUpData), async (c) => {
   return c.json({ jwtToken });
 });
 
-app.post("/api/v1/signin", (c) => {
-  return c.text("Hello Hono!");
+app.post("/api/v1/signin", zValidator("json", SignInData), async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+  const body = await c.req.json();
+  const user = await getUser(prisma, body.email, body.password);
+  if (user != null) {
+    const jwtPaylod = {
+      id: user.id,
+    };
+    const jwtToken = await sign(jwtPaylod, c.env?.JWT_SECRET);
+    return c.json({ jwtToken });
+  }
+  return c.json(
+    { msg: "Either user doesn't exist or password is incorrect" },
+    403
+  );
 });
 
 app.post("/api/v1/blog", (c) => {

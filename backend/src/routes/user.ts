@@ -1,6 +1,3 @@
-import { Prisma, PrismaClient, User } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
-import { decode, sign, verify } from "hono/jwt";
 import dotenv from "dotenv";
 import { BodyData } from "hono/utils/body";
 dotenv.config();
@@ -26,4 +23,14 @@ export async function createUser(prisma: any, user: BodyData) {
     },
   });
   return res;
+}
+
+export async function getUser(prisma: any, email: string, password: string) {
+  const hashed = await generateHash(password);
+  const user = await prisma.user.findUnique({ where: { email: email } });
+  console.log(hashed);
+  console.log(user);
+  if (user.password === hashed) {
+    return user;
+  }
 }
