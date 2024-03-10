@@ -1,7 +1,8 @@
-import { PrismaClient, User } from "@prisma/client/edge";
+import { Prisma, PrismaClient, User } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { decode, sign, verify } from "hono/jwt";
 import dotenv from "dotenv";
+import { BodyData } from "hono/utils/body";
 dotenv.config();
 
 async function generateHash(password: string): Promise<string> {
@@ -15,17 +16,13 @@ async function generateHash(password: string): Promise<string> {
   return hashString;
 }
 
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-}).$extends(withAccelerate());
-
-export async function createUser(user: User) {
-  const hashedPwd = await generateHash(user.password);
+export async function createUser(prisma: any, user: BodyData) {
+  const hashedPwd = await generateHash(user.password.toString());
   const res = await prisma.user.create({
     data: {
-      email: user.email,
+      email: user.email.toString(),
       password: hashedPwd,
-      name: user.name,
+      name: user.name.toString(),
     },
   });
   console.log(res);
