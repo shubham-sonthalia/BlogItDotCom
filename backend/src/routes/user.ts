@@ -25,5 +25,5 @@ export async function createUser(prisma: any, user: BodyData) {
       name: user.name.toString(),
     },
   });
-  console.log(res);
+  return res;
 }

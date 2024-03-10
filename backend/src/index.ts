@@ -5,9 +5,11 @@ import { User } from "@prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { PrismaClient } from "@prisma/client/edge";
 import { zValidator } from "@hono/zod-validator";
+import { decode, jwt, sign, verify } from "hono/jwt";
 
 const app = new Hono<{
   Bindings: {
+    JWT_SECRET: string;
     DATABASE_URL: string;
   };
 }>();
@@ -23,10 +25,13 @@ app.post("/api/v1/signup", zValidator("json", SignUpData), async (c) => {
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
   const body = await c.req.json();
-  await createUser(prisma, body);
-  return c.json({
-    msg: "user created successfully",
-  });
+  const response = await createUser(prisma, body);
+  console.log("dfdfkdfjdf" + response);
+  const jwtPaylod = {
+    id: response.id,
+  };
+  const jwtToken = await sign(jwtPaylod, c.env?.JWT_SECRET);
+  return c.json({ jwtToken });
 });
 
 app.post("/api/v1/signin", (c) => {

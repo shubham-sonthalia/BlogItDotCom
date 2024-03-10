@@ -5,6 +5,8 @@ node_compat = true
 [vars]
 DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiYTJhZDQ2OTEtZmMxZS00NWY5LTg0ZDctNWFjNzM0MmEwOGY1IiwidGVuYW50X2lkIjoiNmZjYmM1MmQ5ODYyYTljNzk4NDZhZTY5N2YzMDZjZGEwYzlhYmJmMmQ1OGE5MjI4YTczNTRjMDNiYTE2MWZiOSIsImludGVybmFsX3NlY3JldCI6IjMzMDkyZWFlLTY3ZTAtNDU5MS1hZjc3LTc3ZDE0NjMwOWU1OCJ9.786WOePz-S-LmaPKfY3ZTzFJtqY592bh34hBcpae_Ms"
 
+JWT_SECRET = "my_secret_jwt_token_ss"
+
 # [[kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
 # id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
