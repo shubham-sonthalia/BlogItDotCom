@@ -1,0 +1,17 @@
+{
+  "name": "@shubhamsonthalia/common-app",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "shubham-sonthalia",
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "types": "./dist/index.d.ts",
+  "description": "zod validation types",
+  "devDependencies": {}
+}
