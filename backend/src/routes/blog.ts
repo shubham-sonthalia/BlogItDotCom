@@ -18,6 +18,12 @@ const BlogPostData = z.object({
   title: z.string().max(100),
   content: z.string(),
 });
+
+const UpdateBlogPostData = z.object({
+  title: z.string().max(100),
+  content: z.string(),
+  id: z.string(),
+});
 export const blog = new Hono<{
   Bindings: Bindings;
   Variables: Variables;
@@ -66,13 +72,13 @@ blog.post("", zValidator("json", BlogPostData), async (c) => {
   }
 });
 
-blog.put("", async (c) => {
+blog.put("", zValidator("json", UpdateBlogPostData), async (c) => {
   const body = await c.req.json();
   const prisma = c.get("prisma");
   const userId = c.get("userId");
   const updatePost = await prisma.post.update({
     where: {
-      id: body.id,
+      id: parseInt(body.id),
       authorId: userId,
     },
     data: {
@@ -99,3 +105,4 @@ blog.get("bulk", async (c) => {
   const posts = await prisma.post.findMany({});
   return c.json(posts);
 });
+
