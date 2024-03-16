@@ -8,15 +8,18 @@ type Variables = {
   prisma: any;
 };
 
+type Bindings = {
+  MY_BUCKET: R2Bucket;
+  JWT_SECRET: string;
+  DATABASE_URL: string;
+};
+
 const BlogPostData = z.object({
   title: z.string().max(100),
   content: z.string(),
 });
 export const blog = new Hono<{
-  Bindings: {
-    JWT_SECRET: string;
-    DATABASE_URL: string;
-  };
+  Bindings: Bindings;
   Variables: Variables;
 }>();
 

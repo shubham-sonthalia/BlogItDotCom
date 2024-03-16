@@ -10,11 +10,14 @@ type Variables = {
   prisma: any;
 };
 
+type Bindings = {
+  JWT_SECRET: string;
+  DATABASE_URL: string;
+  MY_BUCKET: R2Bucket;
+};
+
 export const user = new Hono<{
-  Bindings: {
-    JWT_SECRET: string;
-    DATABASE_URL: string;
-  };
+  Bindings: Bindings;
   Variables: Variables;
 }>();
 

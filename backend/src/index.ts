@@ -9,11 +9,13 @@ type Variables = {
   userId: string;
   prisma: any;
 };
+type Bindings = {
+  JWT_SECRET: string;
+  DATABASE_URL: string;
+  MY_BUCKET: R2Bucket;
+};
 const app = new Hono<{
-  Bindings: {
-    JWT_SECRET: string;
-    DATABASE_URL: string;
-  };
+  Bindings: Bindings;
   Variables: Variables;
 }>().basePath("/api/v1");
 
