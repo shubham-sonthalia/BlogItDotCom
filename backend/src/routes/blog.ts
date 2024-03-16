@@ -55,7 +55,7 @@ blog.post("", zValidator("json", BlogPostData), async (c) => {
         authorId: userId,
       },
     });
-    return c.json(res);
+    return c.json({ id: res.id });
   } catch (error) {
     console.log(error);
     c.status(500);
@@ -70,16 +70,17 @@ blog.put("", async (c) => {
   const updatePost = await prisma.post.update({
     where: {
       id: body.id,
+      authorId: userId,
     },
     data: {
       title: body.title,
       content: body.content,
     },
   });
-  return c.json({ msg: "Post Updated successfully!", result: updatePost });
+  return c.json({ msg: "Post Updated successfully!" });
 });
 
-blog.get(":id", async (c) => {
+blog.get("getById/:id", async (c) => {
   const id = parseInt(c.req.param("id"));
   const prisma = c.get("prisma");
   const post = await prisma.post.findUnique({
@@ -88,4 +89,10 @@ blog.get(":id", async (c) => {
     },
   });
   return c.json(post);
+});
+
+blog.get("bulk", async (c) => {
+  const prisma = c.get("prisma");
+  const posts = await prisma.post.findMany({});
+  return c.json(posts);
 });
