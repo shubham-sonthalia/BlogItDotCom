@@ -4,6 +4,7 @@ import { blog } from "./routes/blog";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { PrismaClient } from "@prisma/client/edge";
 import { zValidator } from "@hono/zod-validator";
+import { cors } from "hono/cors";
 
 type Variables = {
   userId: string;
@@ -18,6 +19,8 @@ const app = new Hono<{
   Bindings: Bindings;
   Variables: Variables;
 }>().basePath("/api/v1");
+
+app.use("*", cors());
 
 app.use("*", async (c, next) => {
   const prisma = new PrismaClient({
