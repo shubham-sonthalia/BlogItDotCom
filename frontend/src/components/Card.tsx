@@ -80,17 +80,24 @@ export const Card = ({
       res = await signUpService(firstName, lastName, email, password);
     }
     if (res == true) {
-      navigate("/dashboard");
+      navigate("/blog");
     }
   };
   return (
-    <div className="grid grid-cols-1 bg-white p-3">
+    <div className="grid grid-cols-1 bg-white p-20">
       <div className="grid grid-rows-2">
         <div className="flex justify-center font-semibold text-2xl">
-          {signIn == true ? <div>Sign In</div> : <div>Sign Up</div>}
+          {signIn == true ? <div>Sign In</div> : <div>Create an account</div>}
         </div>
-        <div className="flex justify-center text-sec_text_gray mb-3">
-          {message}
+        <div>
+          {signIn == false ? (
+            <div className="flex justify-center text-login_ask_text_black">
+              <div className="mr-2">Already have an account?</div>
+              <Link to="/signin">
+                <button className="underline font-semibold">Login</button>
+              </Link>
+            </div>
+          ) : null}
         </div>
       </div>
       <div className="justify-center font-semibold">
@@ -178,21 +185,11 @@ export const Card = ({
       </div>
       <button
         type="button"
-        className="text-btn_white bg-black hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+        className="text-btn_white bg-black hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 h-10"
         onClick={async () => handleSignUpAndSignIn()}
       >
         {signIn == true ? "Sign In" : "Sign Up"}
       </button>
-      <div>
-        {signIn == false ? (
-          <div className="flex justify-center text-login_ask_text_black">
-            <div className="mr-2">Already have an account?</div>
-            <Link to="/signin">
-              <button className="underline font-semibold">Login</button>
-            </Link>
-          </div>
-        ) : null}
-      </div>
     </div>
   );
 };
