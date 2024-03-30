@@ -84,7 +84,7 @@ export const Card = ({
     }
   };
   return (
-    <div className="rounded-lg shadow-md grid grid-cols-1 bg-white p-3">
+    <div className="grid grid-cols-1 bg-white p-3">
       <div className="grid grid-rows-2">
         <div className="flex justify-center font-semibold text-2xl">
           {signIn == true ? <div>Sign In</div> : <div>Sign Up</div>}
